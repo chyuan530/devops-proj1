@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = 'chyuan530/devops'
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
   agent any
   stages {
     stage('Cloning Git') {
@@ -9,26 +14,22 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build("proj1")
+          dockerImage = docker.build registry + ':$BUILD_NUMBER'
         }
       }
     }
     stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')
-
+          docker.withRegistry('', registryCredential ) {
+             dockerImage.push()
           }
         }
       }
     }
     stage('Remove Unused docker image') {
       steps{
-        sh "docker rmi $imagename:$BUILD_NUMBER"
-         sh "docker rmi $imagename:latest"
-
+        sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
   }
