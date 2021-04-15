@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://github.com/chyuan530/devops_proj1.git', branch: 'main', credentialsId: ''])
+        git([url: 'https://github.com/chyuan530/devops-proj1.git', branch: 'main', credentialsId: ''])
       }
     }
     stage('Building image') {
